@@ -1,6 +1,8 @@
-bool comp(pair<int, int>& a, pair<int, int>& b) {
-    return a.second > b.second;
-}
+struct Compare {
+    bool operator()(const pair<int, int>& a, const pair<int, int>& b) {
+        return a.second < b.second; 
+    }
+};
 
 class Solution {
 public:
@@ -9,16 +11,18 @@ public:
         for (int num: nums) {
             map[num]++;
         }
-        vector<pair<int, int>> freq(map.begin(), map.end());
+        
+        priority_queue<pair<int, int>, vector<pair<int, int>>, Compare> pq(map.begin(), map.end());
 
-        sort(freq.begin(), freq.end(), comp);
-
-        int numSize = freq.size();
+        int numSize = pq.size();
         vector<int> topFreq;
 
         for (int i = 0; i < k; i++) {
-            topFreq.push_back(freq[i].first);
+            pair<int, int> curr = pq.top();
+            pq.pop();
+            topFreq.push_back(curr.first);
         }
         return topFreq;
     }
 };
+
